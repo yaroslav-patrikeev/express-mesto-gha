@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(() => console.log('База данных подключена'));
-const { PORT } = process.env;
+const { PORT = 3000 } = process.env;
 
 app.use((req, res, next) => {
   req.user = {
