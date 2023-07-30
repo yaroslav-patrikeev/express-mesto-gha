@@ -19,7 +19,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Поле должно быть заполнено'],
       validate: {
-        validator: (v) => validator.isURL(v),
+        validator(v) {
+          return validator.isURL(v);
+        },
         message: 'Некорректный URL',
       },
     },
