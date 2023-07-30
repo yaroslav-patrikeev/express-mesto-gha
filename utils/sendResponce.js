@@ -10,7 +10,7 @@ const sendResponce = (promise, res) => {
       return res.status(SUCCESSFUL_REQUEST).send(data);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') return res.status(INCORRECT_DATA_ERROR).send({ message: 'Incorrect Data' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') return res.status(INCORRECT_DATA_ERROR).send({ message: err.message });
       return res.status(SERVER_ERROR).send({ message: 'Server Error' });
     });
 };

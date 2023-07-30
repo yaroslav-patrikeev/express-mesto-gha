@@ -10,14 +10,13 @@ const createCard = (req, res) => {
   cardModel.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send(card))
     .catch((err) => {
-      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Incorrect Data' });
+      if (err.name === 'ValidationError') return res.status(400).send({ message: err.message });
       return res.status(500).send({ message: 'Server Error' });
     });
 };
 
 const deleteCard = (req, res) => {
   sendResponce(cardModel.findByIdAndRemove(req.params.cardId), res);
-  cardModel.findByIdAndRemove(req.params.cardId);
 };
 
 const like = (req, res) => {
