@@ -19,7 +19,7 @@ const createUser = (req, res, next) => {
       req.body.password = hash;
       return userModel.create(req.body);
     })
-    .then((data) => res.status(201).send({ email: data.email, _id: data._id }))
+    .then((data) => res.status(201).send(data))
     .catch((err) => {
       if (err.code === 11000) return res.status(409).send({ message: 'Такой email уже зарегистрирован' });
       if (err.name === 'ValidationError') {
@@ -49,7 +49,7 @@ const login = (req, res, next) => {
   userModel.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return res.status(400).send({ message: 'Неправильные почта или пароль' });
+        return res.status(401).send({ message: 'Неправильные почта или пароль' });
       }
       if (bcrypt.compare(password, user.password)) {
         const token = jwt.sign({ _id: user._id }, JWT_SECRET);
@@ -58,14 +58,14 @@ const login = (req, res, next) => {
           httpOnly: true,
         }).send({ token });
       }
-      return res.status(400).send({ message: 'Неправильные почта или пароль' });
+      return res.status(401).send({ message: 'Неправильные почта или пароль' });
     })
     .catch(next);
 };
 
-const getInformation = (req, res) => {
+const getInformation = (req, res, next) => {
   const { _id } = req.user;
-  res.status(200).send(_id);
+  sendResponce(userModel.findOne({ _id }), res, next);
 };
 
 module.exports = {
