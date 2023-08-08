@@ -20,15 +20,22 @@ mongoose.connect(DB_URL)
 
 app.use(helmet());
 
-const serverValidation = celebrate({
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(/https*:w*\.*\/\/\S*/),
+  }),
+}), createUser);
+
+app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
-});
-
-app.post('/signup', serverValidation, createUser);
-app.post('/signin', serverValidation, login);
+}), login);
 
 app.use(auth);
 

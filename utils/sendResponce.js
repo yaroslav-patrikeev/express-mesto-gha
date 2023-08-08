@@ -7,11 +7,11 @@ const SUCCESSFUL_REQUEST = 200;
 const sendResponce = (promise, res, next) => {
   promise
     .then((data) => {
-      if (!data) throw new NotFoundError('Не найдено');
+      if (!data) return next(new NotFoundError('Не найдено'));
       return res.status(SUCCESSFUL_REQUEST).send(data);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') return next(IncorrectDataError('Некорректные данные'));
+      if (err.name === 'ValidationError' || err.name === 'CastError') return next(new IncorrectDataError('Некорректные данные'));
       return next(new ServerError());
     });
 };

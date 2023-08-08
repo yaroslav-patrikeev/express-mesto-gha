@@ -63,13 +63,11 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
-const getInformation = (req, res, next) => {
-  res.send('ПРивет!');
-  next();
+const getInformation = (req, res) => {
+  const { _id } = req.user;
+  res.status(200).send(_id);
 };
 
-// sendResponce(res.status(200)
-//   .send(req.user._id), res, next);
 module.exports = {
   getAllUsers,
   getUserById,
