@@ -1,17 +1,18 @@
-const SUCCESSFUL_REQUEST = 200;
-const INCORRECT_DATA_ERROR = 400;
-const NOT_FOUND_ERROR = 404;
-const SERVER_ERROR = 500;
+const IncorrectDataError = require('../errors/IncorrectDataError');
+const NotFoundError = require('../errors/NotFoundError');
+const ServerError = require('../errors/ServerError');
 
-const sendResponce = (promise, res) => {
+const SUCCESSFUL_REQUEST = 200;
+
+const sendResponce = (promise, res, next) => {
   promise
     .then((data) => {
-      if (!data) return res.status(NOT_FOUND_ERROR).send({ message: 'Not found' });
+      if (!data) throw new NotFoundError('Не найдено');
       return res.status(SUCCESSFUL_REQUEST).send(data);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') return res.status(INCORRECT_DATA_ERROR).send({ message: err.message });
-      return res.status(SERVER_ERROR).send({ message: 'Server Error' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') return next(IncorrectDataError('Некорректные данные'));
+      return next(new ServerError());
     });
 };
 
