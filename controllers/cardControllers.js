@@ -1,8 +1,8 @@
 const cardModel = require('../models/card');
-const sendResponce = require('../utils/sendResponce');
+const sendResponse = require('../utils/sendResponse');
 
-const getAllCards = (req, res) => {
-  sendResponce(cardModel.find().populate('owner'), res);
+const getAllCards = (req, res, next) => {
+  sendResponse(cardModel.find().populate('owner'), res, next);
 };
 
 const createCard = (req, res) => {
@@ -19,13 +19,13 @@ const deleteCard = (req, res) => {
   const cardOwner = cardModel.findOne(req.params.cardId)
     .then((card) => card.owner);
   if (cardOwner === req.user._id) {
-    return sendResponce(cardModel.findByIdAndRemove(req.params.cardId), res);
+    return sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res);
   }
   return res.status(401).send({ message: 'Недостаточно прав' });
 };
 
-const like = (req, res) => {
-  sendResponce(
+const like = (req, res, next) => {
+  sendResponse(
     cardModel.findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
@@ -33,17 +33,19 @@ const like = (req, res) => {
     )
       .populate(['owner', 'likes']),
     res,
+    next,
   );
 };
 
-const deleteLike = (req, res) => {
-  sendResponce(
+const deleteLike = (req, res, next) => {
+  sendResponse(
     cardModel.findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
     ),
     res,
+    next,
   );
 };
 

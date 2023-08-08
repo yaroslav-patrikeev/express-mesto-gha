@@ -3,14 +3,14 @@ const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET = 'ab7b913c948c8378b9a3eac83d7b2d0c' } = process.env;
 const userModel = require('../models/user');
-const sendResponce = require('../utils/sendResponce');
+const sendResponse = require('../utils/sendResponse');
 
 const getAllUsers = (req, res, next) => {
-  sendResponce(userModel.find(), res, next);
+  sendResponse(userModel.find(), res, next);
 };
 
 const getUserById = (req, res, next) => {
-  sendResponce(userModel.findById(req.params.userId), res, next);
+  sendResponse(userModel.findById(req.params.userId), res, next);
 };
 
 const createUser = (req, res, next) => {
@@ -31,7 +31,7 @@ const createUser = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  sendResponce(userModel.findByIdAndUpdate(
+  sendResponse(userModel.findByIdAndUpdate(
     req.user._id,
     { name, about },
     { new: true, runValidators: true },
@@ -40,7 +40,7 @@ const updateProfile = (req, res, next) => {
 
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  sendResponce(userModel
+  sendResponse(userModel
     .findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true }), res, next);
 };
 
@@ -65,7 +65,7 @@ const login = (req, res, next) => {
 
 const getInformation = (req, res, next) => {
   const { _id } = req.user;
-  sendResponce(userModel.findOne({ _id }), res, next);
+  sendResponse(userModel.findOne({ _id }), res, next);
 };
 
 module.exports = {
