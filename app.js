@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const router = require('./routes/index');
 const { createUser, login } = require('./controllers/userControllers');
 const auth = require('./middlewares/auth');
@@ -33,6 +33,8 @@ app.post('/signin', serverValidation, login);
 app.use(auth);
 
 app.use('/', router);
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
