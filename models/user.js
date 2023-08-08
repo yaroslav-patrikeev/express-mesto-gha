@@ -37,12 +37,19 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      select: false,
       required: [true, 'Поле должно быть заполнено'],
       minlength: 8,
-      select: false,
     },
   },
   { versionKey: false },
 );
+
+// eslint-disable-next-line func-names
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
 
 module.exports = mongoose.model('user', userSchema);
