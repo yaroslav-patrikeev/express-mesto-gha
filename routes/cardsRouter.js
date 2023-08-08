@@ -22,12 +22,12 @@ cardsRouter.delete('/:cardId', celebrate({
 }), deleteCard);
 cardsRouter.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().min(24).max(24).required(),
+    cardId: Joi.string().regex(/[a-z0-9]{24}/).required(),
   }),
 }), like);
 cardsRouter.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required(),
+    cardId: Joi.string().regex(/[a-z0-9]{24}/).required(),
   }),
 }), deleteLike);
 

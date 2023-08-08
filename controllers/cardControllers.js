@@ -16,12 +16,11 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  const cardOwner = cardModel.findOne(req.params.cardId)
-    .then((card) => card.owner);
-  if (cardOwner === req.user._id) {
-    return sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res);
+  try {
+    sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res);
+  } catch (err) {
+    res.status(403).send({ message: 'Недостаточно прав' });
   }
-  return res.status(403).send({ message: 'Недостаточно прав' });
 };
 
 const like = (req, res, next) => {
