@@ -17,6 +17,7 @@ const createCard = (req, res) => {
 
 const deleteCard = (req, res) => {
   try {
+    console.log(req.params.cardId);
     sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res);
   } catch (err) {
     res.status(403).send({ message: 'Недостаточно прав' });
