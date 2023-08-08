@@ -7,7 +7,7 @@ const SUCCESSFUL_REQUEST = 200;
 const sendResponse = (promise, res, next) => {
   promise
     .then((data) => {
-      if (!data) throw new NotFoundError('Не найдено');
+      if (!data || data === null) throw new NotFoundError('Не найдено');
       return res.status(SUCCESSFUL_REQUEST).send(data);
     })
     .catch((err) => {

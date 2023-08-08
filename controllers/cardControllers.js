@@ -21,7 +21,7 @@ const deleteCard = (req, res) => {
   if (cardOwner === req.user._id) {
     return sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res);
   }
-  return res.status(401).send({ message: 'Недостаточно прав' });
+  return res.status(403).send({ message: 'Недостаточно прав' });
 };
 
 const like = (req, res, next) => {
