@@ -1,5 +1,8 @@
 const cardModel = require('../models/card');
 const sendResponse = require('../utils/sendResponse');
+const IncorrectDataError = require('../errors/IncorrectDataError');
+const NotFoundError = require('../errors/NotFoundError');
+const ServerError = require('../errors/ServerError');
 
 const getAllCards = (req, res, next) => {
   sendResponse(cardModel.find().populate('owner'), res, next);
@@ -16,11 +19,18 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res, next) => {
-  try {
-    sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res, next);
-  } catch (err) {
-    res.status(403).send({ message: 'Недостаточно прав' });
-  }
+  cardModel.findByIdAndRemove(req.params.cardId)
+    .then((data) => {
+      if (!data) throw new NotFoundError('Не найдено');
+      if (req.user._id === data.owner) res.status(200).send(data);
+      return res.status(403).send({ message: 'Недостаточно прав' });
+    })
+    .catch((err) => {
+      if (err.statusCode === 404) throw err;
+      if (['ValidationError', 'CastError'].includes(err.name)) throw new IncorrectDataError('Некорректные данные');
+      throw new ServerError('Ошибка на сервере');
+    })
+    .catch(next);
 };
 
 const like = (req, res, next) => {
