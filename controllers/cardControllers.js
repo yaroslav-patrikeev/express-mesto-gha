@@ -22,7 +22,7 @@ const deleteCard = (req, res, next) => {
   cardModel.findByIdAndRemove(req.params.cardId)
     .then((data) => {
       if (!data) throw new NotFoundError('Не найдено');
-      if (req.user._id === data.owner) res.status(200).send(data);
+      if (req.user._id === data.owner.toString()) res.status(200).send(data);
       return res.status(403).send({ message: 'Недостаточно прав' });
     })
     .catch((err) => {
