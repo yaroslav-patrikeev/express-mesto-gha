@@ -15,10 +15,9 @@ const createCard = (req, res) => {
     });
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   try {
-    console.log(req.params.cardId);
-    sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res);
+    sendResponse(cardModel.findByIdAndRemove(req.params.cardId), res, next);
   } catch (err) {
     res.status(403).send({ message: 'Недостаточно прав' });
   }

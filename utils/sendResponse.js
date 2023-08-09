@@ -11,7 +11,6 @@ const sendResponse = (promise, res, next) => {
       return res.status(SUCCESSFUL_REQUEST).send(data);
     })
     .catch((err) => {
-      console.log(err);
       if (err.statusCode === 404) throw err;
       if (['ValidationError', 'CastError'].includes(err.name)) throw new IncorrectDataError('Некорректные данные');
       throw new ServerError('Ошибка на сервере');
