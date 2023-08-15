@@ -1,7 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 const { urlRegExp } = require('../utils/constants');
 
-export const validateUserBody = celebrate({
+const validateUserBody = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
@@ -10,9 +10,14 @@ export const validateUserBody = celebrate({
     avatar: Joi.string().regex(urlRegExp),
   }),
 });
-export const validateAuthentication = celebrate({
+const validateAuthentication = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
 });
+
+module.exports = {
+  validateUserBody,
+  validateAuthentication,
+};
