@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const router = require('./routes/index');
-const { handleErrors } = require('./middlewares/handleErrors');
+const handleErrors = require('./middlewares/handleErrors');
 
 const app = express();
 

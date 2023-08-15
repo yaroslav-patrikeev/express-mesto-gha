@@ -72,8 +72,9 @@ const getInformation = (req, res, next) => {
   sendResponse(userModel.findOne({ _id }), res, next);
 };
 
-const logout = (req, res) => {
+const logout = (req, res, next) => {
   res.clearCookie('token').send({ message: 'Выход' });
+  next();
 };
 
 module.exports = {

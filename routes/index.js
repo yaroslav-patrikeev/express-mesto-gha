@@ -9,7 +9,7 @@ const { validateUserBody, validateAuthentication } = require('../middlewares/val
 router.post('/signup', validateUserBody, createUser);
 router.post('/signin', validateAuthentication, login);
 router.use(auth);
-router.use('/signout', logout);
+router.get('/signout', logout);
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 router.use('/', () => {
