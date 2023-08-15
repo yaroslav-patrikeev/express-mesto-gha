@@ -1,6 +1,5 @@
 const IncorrectDataError = require('../errors/IncorrectDataError');
 const NotFoundError = require('../errors/NotFoundError');
-const ServerError = require('../errors/ServerError');
 
 const sendResponse = (promise, res, next) => {
   promise
@@ -9,11 +8,9 @@ const sendResponse = (promise, res, next) => {
       return res.status(200).send(data);
     })
     .catch((err) => {
-      if (err.statusCode === 404) throw err;
-      if (['ValidationError', 'CastError'].includes(err.name)) throw new IncorrectDataError('Некорректные данные');
-      throw new ServerError('Ошибка на сервере');
-    })
-    .catch(next);
+      if (['ValidationError', 'CastError'].includes(err.name)) next(new IncorrectDataError('Некорректные данные'));
+      else next(err);
+    });
 };
 
 module.exports = sendResponse;

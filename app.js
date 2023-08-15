@@ -3,10 +3,9 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const router = require('./routes/index');
-const { createUser, login } = require('./controllers/userControllers');
-const auth = require('./middlewares/auth');
+const { handleErrors } = require('./middlewares/handleErrors');
 
 const app = express();
 
@@ -20,34 +19,11 @@ mongoose.connect(DB_URL)
 
 app.use(helmet());
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-    about: Joi.string().min(2).max(30),
-    name: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/https*:w*\.*\/\/\S*/),
-  }),
-}), createUser);
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
-
-app.use(auth);
-
 app.use('/', router);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  res.status(statusCode).send({ message: err.message });
-  next();
-});
+app.use(handleErrors);
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порте ${PORT}`);
