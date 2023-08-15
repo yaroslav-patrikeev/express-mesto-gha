@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { urlRegExp } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator(v) {
-          return /https*:w*\.*\/\/\S*/.test(v);
+          return urlRegExp.test(v);
         },
         message: 'Некорректный URL',
       },

@@ -23,16 +23,15 @@ const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   cardModel.findById(cardId)
     .then((card) => {
-      if (!card) next(new NotFoundError('Не найдено'));
-      if (req.user._id !== card.owner.toString()) next(new ForbiddenError('Недостаточно прав'));
+      if (!card) return next(new NotFoundError('Не найдено'));
+      if (req.user._id !== card.owner.toString()) return next(new ForbiddenError('Недостаточно прав'));
       card.deleteOne()
         .then(() => res.status(200).send(card))
         .catch(next);
     })
     .catch((err) => {
-      if (err.statusCode === 404) throw err;
-      if (['ValidationError', 'CastError'].includes(err.name)) throw new IncorrectDataError('Некорректные данные');
-      throw new ServerError('Ошибка на сервере');
+      if (['ValidationError', 'CastError'].includes(err.name)) return next(new IncorrectDataError('Некорректные данные'));
+      next(err);
     });
 };
 
